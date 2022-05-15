@@ -1,7 +1,6 @@
 package elevator;
 
 import utils.ElevatorDirection;
-import utils.ElevatorDirection;
 import utils.OrderDirection;
 
 import java.util.TreeSet;
@@ -14,13 +13,13 @@ public class Elevator {
     private final TreeSet<Integer> upwardsOrders = new TreeSet<>();
     private final TreeSet<Integer> downwardsOrders = new TreeSet<>();
 
-    public Elevator(int id) {
+    Elevator(int id) {
         this.id = id;
         this.direction = ElevatorDirection.NONE;
         this.currentFloor = 0;
     }
 
-    public void addOrder(int orderedFloor) {
+    void addOrder(int orderedFloor) {
         if (orderedFloor > currentFloor) {
             upwardsOrders.add(orderedFloor);
         } else if (orderedFloor < currentFloor) {
@@ -28,7 +27,7 @@ public class Elevator {
         }
     }
 
-    public void removeClosestOrder() {
+    void removeClosestOrder() {
         if (direction == ElevatorDirection.UPWARDS) {
             upwardsOrders.remove(upwardsOrders.first());
         } else if (direction == ElevatorDirection.DOWNWARDS) {
@@ -36,77 +35,89 @@ public class Elevator {
         }
     }
 
-    public int getId() {
+    int getId() {
         return id;
     }
 
-    public int getCurrentFloor() {
+    int getCurrentFloor() {
         return currentFloor;
     }
 
-    public void setDirection(ElevatorDirection direction) {
+    void setDirection(ElevatorDirection direction) {
         this.direction = direction;
     }
 
-    public void setCurrentFloor(int currentFloor) {
+    void setCurrentFloor(int currentFloor) {
         this.currentFloor = currentFloor;
     }
 
-    public boolean isIdle() {
+    boolean isIdle() {
         return direction == ElevatorDirection.NONE;
     }
 
-    public boolean isHeadedUpwards() {
+    boolean isHeadedUpwards() {
         return direction == ElevatorDirection.UPWARDS;
     }
 
-    public boolean isHeadedDownwards() {
+    boolean isHeadedDownwards() {
         return direction == ElevatorDirection.DOWNWARDS;
     }
 
-    public boolean isHeadedTowardsOrder(Integer orderedFloor) {
+    boolean isHeadedTowardsOrder(Integer orderedFloor) {
         return (orderedFloor >= currentFloor && direction == ElevatorDirection.UPWARDS) ||
                 (orderedFloor <= currentFloor && direction == ElevatorDirection.DOWNWARDS);
     }
 
-    public boolean isSameDirection(OrderDirection direction) {
+    boolean isSameDirection(OrderDirection direction) {
         return this.direction == ElevatorDirection.UPWARDS && direction == OrderDirection.UPWARDS ||
                 this.direction == ElevatorDirection.DOWNWARDS && direction == OrderDirection.DOWNWARDS;
     }
 
-    public boolean hasOrders() {
+    boolean hasOrders() {
         return !upwardsOrders.isEmpty() || !downwardsOrders.isEmpty();
     }
 
-    public int upwardsOrdersAmount() {
+    int upwardsOrdersAmount() {
         return upwardsOrders.size();
     }
 
-    public int downwardOrdersAmount() {
+    int downwardOrdersAmount() {
         return downwardsOrders.size();
     }
 
-    public boolean hasDownwardsOrders() {
+    boolean hasDownwardsOrders() {
         return !downwardsOrders.isEmpty();
     }
 
-    public boolean hasUpwardsOrders() {
+    boolean hasUpwardsOrders() {
         return !upwardsOrders.isEmpty();
     }
 
-    public void move() {
+    void move() {
         if (isHeadedUpwards()) {
             this.currentFloor++;
-        } else if(isHeadedDownwards()){
+        } else if (isHeadedDownwards()) {
             this.currentFloor--;
         }
     }
 
-    public int nextDownwardsOrder() {
+    int nextDownwardsOrder() {
         return downwardsOrders.last();
     }
 
-    public int nextUpwardsOrder() {
+    int nextUpwardsOrder() {
         return upwardsOrders.first();
+    }
+
+    int getTargetFloor() {
+        if (isHeadedUpwards() && hasUpwardsOrders()) {
+            return nextUpwardsOrder();
+        }
+
+        if (isHeadedDownwards() && hasDownwardsOrders()) {
+            return nextDownwardsOrder();
+        }
+
+        return -1;
     }
 }

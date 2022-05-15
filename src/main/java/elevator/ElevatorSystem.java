@@ -5,7 +5,6 @@ import utils.OrderDirection;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -25,16 +24,19 @@ public class ElevatorSystem {
     }
 
     public int pickUp(Integer floor, OrderDirection direction) {
-        Elevator elevator = findBestElevator(floor, direction);
-        elevator.addOrder(floor);
+        if (floor >= 0 && floor <= floorsAmount) {
+            Elevator elevator = findBestElevator(floor, direction);
+            elevator.addOrder(floor);
 
-        return elevator.getId();
+            return elevator.getId();
+        }
+        return -1;
     }
 
     private Elevator findBestElevator(Integer floor, OrderDirection direction) {
         Comparator<Elevator> byFitness = Comparator.comparing(e -> getElevatorFitness(e, floor, direction));
 
-        return elevatorsList.stream().max(byFitness).orElse(null);
+        return elevatorsList.stream().min(byFitness).orElse(null);
     }
 
     private int getElevatorFitness(Elevator elevator, Integer orderedFloor, OrderDirection direction) {
@@ -120,4 +122,18 @@ public class ElevatorSystem {
         return elevatorsList;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Elevators: [");
+        for (Elevator elevator : elevatorsList) {
+            sb.append(elevator.getId())
+                    .append(",")
+                    .append(elevator.getCurrentFloor())
+                    .append(",")
+                    .append(elevator.getTargetFloor())
+                    .append(";");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }
