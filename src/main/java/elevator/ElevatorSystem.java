@@ -3,7 +3,9 @@ package elevator;
 import utils.ElevatorDirection;
 import utils.OrderDirection;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,44 +19,32 @@ public class ElevatorSystem {
     public ElevatorSystem(int floorsAmount, int elevatorsAmount) {
         this.floorsAmount = floorsAmount;
         this.elevatorsAmount = elevatorsAmount;
-        elevatorsList = IntStream.range(0,elevatorsAmount)
+        elevatorsList = IntStream.range(0, elevatorsAmount)
                 .mapToObj(Elevator::new)
                 .collect(Collectors.toList());
     }
 
-    public int pickUp(Integer floor, OrderDirection direction){
+    public int pickUp(Integer floor, OrderDirection direction) {
         Elevator elevator = findBestElevator(floor, direction);
         elevator.addOrder(floor);
 
         return elevator.getId();
     }
 
-    private Elevator findBestElevator(Integer floor, OrderDirection direction){
+    private Elevator findBestElevator(Integer floor, OrderDirection direction) {
+        Comparator<Elevator> byFitness = Comparator.comparing(e -> getElevatorFitness(e, floor, direction));
 
-        Elevator bestElevator = null;
-        int bestElevatorFitness = Integer.MAX_VALUE;
-
-        for (Elevator currentElevator:elevatorsList) {
-            int currentFitness = getElevatorFitness(currentElevator, floor, direction);
-            if(bestElevatorFitness > currentFitness){
-                bestElevatorFitness = currentFitness;
-                bestElevator = currentElevator;
-            }
-        }
-
-        return bestElevator;
+        return elevatorsList.stream().max(byFitness).orElse(null);
     }
 
     private int getElevatorFitness(Elevator elevator, Integer orderedFloor, OrderDirection direction) {
 
         if (elevator.isIdle()) {
-
             return getSameDirectionOrIdleFitness(elevator, orderedFloor);
-
-        } else if(elevator.isHeadedTowardsOrder(orderedFloor)){
-            if(elevator.isSameDirection(direction)){
+        } else if (elevator.isHeadedTowardsOrder(orderedFloor)) {
+            if (elevator.isSameDirection(direction)) {
                 return getSameDirectionOrIdleFitness(elevator, orderedFloor);
-            }else {
+            } else {
                 return getOppositeDirectionFitness(elevator, orderedFloor);
             }
         } else {
@@ -71,17 +61,61 @@ public class ElevatorSystem {
         return Math.abs(elevator.getCurrentFloor() - orderedFloor);
     }
 
-    public void update(){
-
+    public void step() {
+        elevatorsList.forEach(this::moveElevator);
     }
 
-    public void step(){
-        for (Elevator elevator:elevatorsList) {
-            elevator.move();
+    private void moveElevator(Elevator elevator) {
+        if (elevator.isIdle()) {
+            changeDirectionFromIdle(elevator);
+        } else if (elevator.isHeadedUpwards()) {
+            moveElevatorUpwards(elevator);
+        } else {
+            moveElevatorDownwards(elevator);
         }
     }
 
-    public List<Elevator> status(){
+    private void moveElevatorDownwards(Elevator elevator) {
+        if (elevator.hasDownwardsOrders()) {
+            elevator.move();
+            if (elevator.getCurrentFloor() == elevator.nextDownwardsOrder()) {
+                elevator.removeClosestOrder();
+            }
+        } else {
+            if (elevator.hasUpwardsOrders()) {
+                elevator.setDirection(ElevatorDirection.UPWARDS);
+            } else {
+                elevator.setDirection(ElevatorDirection.NONE);
+            }
+        }
+    }
+
+    private void moveElevatorUpwards(Elevator elevator) {
+        if (elevator.hasUpwardsOrders()) {
+            elevator.move();
+            if (elevator.getCurrentFloor() == elevator.nextUpwardsOrder()) {
+                elevator.removeClosestOrder();
+            }
+        } else {
+            if (elevator.hasDownwardsOrders()) {
+                elevator.setDirection(ElevatorDirection.DOWNWARDS);
+            } else {
+                elevator.setDirection(ElevatorDirection.NONE);
+            }
+        }
+    }
+
+    private void changeDirectionFromIdle(Elevator elevator) {
+        if (elevator.hasOrders()) {
+            if (elevator.upwardsOrdersAmount() > elevator.downwardOrdersAmount()) {
+                elevator.setDirection(ElevatorDirection.UPWARDS);
+            } else {
+                elevator.setDirection(ElevatorDirection.DOWNWARDS);
+            }
+        }
+    }
+
+    public List<Elevator> getElevatorsList() {
 
         return elevatorsList;
     }

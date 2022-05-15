@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ElevatorTest {
 
     @Test
-    public void shouldAddUpwardsOrderCorrectly(){
+    public void shouldAddUpwardsOrderCorrectly() {
         //Given
         Elevator elevator = new Elevator(0);
 
@@ -16,12 +16,12 @@ public class ElevatorTest {
         elevator.addOrder(3);
 
         //Then
-        assertEquals(elevator.getUpwardsOrders().size(), 1);
-        assertEquals(elevator.getUpwardsOrders().first(), 3);
+        assertEquals(elevator.upwardsOrdersAmount(), 1);
+        assertEquals(elevator.nextUpwardsOrder(), 3);
     }
 
     @Test
-    public void shouldNotAddOrders(){
+    public void shouldNotAddOrders() {
         //Given
         Elevator elevator = new Elevator(0);
 
@@ -29,11 +29,11 @@ public class ElevatorTest {
         elevator.addOrder(0);
 
         //Then
-        assertEquals(elevator.getUpwardsOrders().size(), 0);
+        assertEquals(elevator.upwardsOrdersAmount(), 0);
     }
 
     @Test
-    public void shouldBeHeadedTowardsOrder(){
+    public void shouldBeHeadedTowardsOrder() {
         //Given
         Elevator elevator = new Elevator(0);
 
@@ -45,7 +45,7 @@ public class ElevatorTest {
     }
 
     @Test
-    public void shouldNotBeHeadedTowardsOrder(){
+    public void shouldNotBeHeadedTowardsOrder() {
         //Given
         Elevator elevator = new Elevator(0);
 
