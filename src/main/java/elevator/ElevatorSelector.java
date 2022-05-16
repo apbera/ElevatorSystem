@@ -27,11 +27,15 @@ public class ElevatorSelector {
         if (elevator.isIdle()) {
             return getSameDirectionOrIdleFitness(elevator, orderedFloor);
         } else if (elevator.isHeadedTowardsOrder(orderedFloor)) {
-            if (elevator.isSameDirection(direction)) {
-                return getSameDirectionOrIdleFitness(elevator, orderedFloor);
-            } else {
-                return getOppositeDirectionFitness(elevator, orderedFloor);
-            }
+            return getHeadedTowardsOrderFitness(elevator, orderedFloor, direction);
+        } else {
+            return getOppositeDirectionFitness(elevator, orderedFloor);
+        }
+    }
+
+    private int getHeadedTowardsOrderFitness(Elevator elevator, Integer orderedFloor, OrderDirection direction) {
+        if (elevator.isSameDirection(direction)) {
+            return getSameDirectionOrIdleFitness(elevator, orderedFloor);
         } else {
             return getOppositeDirectionFitness(elevator, orderedFloor);
         }

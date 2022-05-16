@@ -16,31 +16,32 @@ public class ElevatorEngine {
 
     private void moveElevatorDownwards(Elevator elevator) {
         if (elevator.hasDownwardsOrders()) {
-            elevator.move();
-            if (elevator.getCurrentFloor() == elevator.nextDownwardsOrder()) {
-                elevator.removeClosestOrder();
-            }
+            moveElevatorAndRemoveOrder(elevator, elevator.nextDownwardsOrder());
         } else {
-            if (elevator.hasUpwardsOrders()) {
-                elevator.setDirection(ElevatorDirection.UPWARDS);
-            } else {
-                elevator.setDirection(ElevatorDirection.NONE);
-            }
+            changeDirectionIfHasOrders(elevator, elevator.hasUpwardsOrders(), ElevatorDirection.UPWARDS);
         }
     }
 
     private void moveElevatorUpwards(Elevator elevator) {
         if (elevator.hasUpwardsOrders()) {
-            elevator.move();
-            if (elevator.getCurrentFloor() == elevator.nextUpwardsOrder()) {
-                elevator.removeClosestOrder();
-            }
+            moveElevatorAndRemoveOrder(elevator, elevator.nextUpwardsOrder());
         } else {
-            if (elevator.hasDownwardsOrders()) {
-                elevator.setDirection(ElevatorDirection.DOWNWARDS);
-            } else {
-                elevator.setDirection(ElevatorDirection.NONE);
-            }
+            changeDirectionIfHasOrders(elevator, elevator.hasDownwardsOrders(), ElevatorDirection.DOWNWARDS);
+        }
+    }
+
+    private void moveElevatorAndRemoveOrder(Elevator elevator, int nextOrder) {
+        elevator.move();
+        if (elevator.getCurrentFloor() == nextOrder) {
+            elevator.removeClosestOrder();
+        }
+    }
+
+    private void changeDirectionIfHasOrders(Elevator elevator, boolean hasOrders, ElevatorDirection direction) {
+        if (hasOrders) {
+            elevator.setDirection(direction);
+        } else {
+            elevator.setDirection(ElevatorDirection.NONE);
         }
     }
 

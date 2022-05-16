@@ -30,21 +30,24 @@ public class App {
             floorsAmount = Integer.parseInt(args[0]);
             elevatorsAmount = Integer.parseInt(args[1]);
 
-            if (floorsAmount < 0 || elevatorsAmount < 0) {
-                System.out.println("Arguments can't be less than 0");
-                System.exit(1);
-            }
-            if (elevatorsAmount > 16) {
-                System.out.println("System supports up to 16 elevators");
-                System.exit(1);
-            }
-
         } catch (NumberFormatException ex) {
             System.out.println("Arguments need to be Integers: floorsAmount, elevatorsAmount");
             System.exit(1);
         }
+
+        checkElevatorsAndFloorsAmount(floorsAmount, elevatorsAmount);
     }
 
+    private static void checkElevatorsAndFloorsAmount(int floorsAmount, int elevatorsAmount) {
+        if (floorsAmount < 0 || elevatorsAmount < 0) {
+            System.out.println("Arguments can't be less than 0");
+            System.exit(1);
+        }
+        if (elevatorsAmount > 16) {
+            System.out.println("System supports up to 16 elevators");
+            System.exit(1);
+        }
+    }
 
     private static void printOptions() {
         System.out.println("""
@@ -52,7 +55,6 @@ public class App {
                 Options:
                 step [numberOfSteps]
                 pickup [floorNumber] [direction]
-                update [elevatorId] [currentFloor] [targetFloor]
                 exit
                 """);
     }
@@ -66,7 +68,11 @@ public class App {
                 return;
             }
             String[] splitInstruction = instruction.split("\\s+");
-            optionsHandler.handleOption(splitInstruction);
+            try {
+                optionsHandler.handleOption(splitInstruction);
+            } catch (NumberFormatException ex) {
+                System.out.println("Wrong arguments type");
+            }
         }
     }
 

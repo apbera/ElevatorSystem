@@ -15,45 +15,47 @@ public class ElevatorSystem {
 
     private final ElevatorSelector elevatorSelector;
     private final ElevatorEngine elevatorEngine;
-    private final List<ElevatorStatus> elevatorStatusList;
 
     public ElevatorSystem(int floorsAmount, int elevatorsAmount) {
         this.floorsAmount = floorsAmount;
         this.elevatorsAmount = elevatorsAmount;
         elevatorsList = IntStream.range(0, elevatorsAmount)
                 .mapToObj(Elevator::new)
-                .collect(Collectors.toList());
+                .toList();
         this.elevatorSelector = new ElevatorSelector(elevatorsList, floorsAmount);
         this.elevatorEngine = new ElevatorEngine();
-        this.elevatorStatusList = elevatorsList.stream()
-                .map(ElevatorStatus::new)
-                .collect(Collectors.toList());
     }
 
-    public Optional<Integer> pickup(Integer floor, OrderDirection direction) {
-        if (floor < 0 || floor > floorsAmount) {
-            return Optional.empty();
+    public Optional<Integer> pickup(int floor, OrderDirection direction) {
+        if (checkIfPickupArgumentsCorrect(floor)) {
+            return elevatorSelector
+                    .findBestElevator(floor, direction)
+                    .map(bestElevator -> {
+                        bestElevator.addOrder(floor);
+                        return bestElevator.getId();
+                    });
         }
-
-        Optional<Elevator> elevator = elevatorSelector.findBestElevator(floor, direction);
-        if (elevator.isPresent()) {
-            elevator.get().addOrder(floor);
-
-            return Optional.of(elevator.get().getId());
-        }
-
         return Optional.empty();
     }
 
+    private boolean checkIfPickupArgumentsCorrect(int floor){
+        return floor >= 0 && floor < floorsAmount;
+    }
+
     public Optional<Integer> update(int elevatorId, int currentFloor, int targetFloor) {
-        if (elevatorId >= 0 && elevatorId < elevatorsAmount) {
+        if (checkIfUpdateArgumentsCorrect(elevatorId, currentFloor, targetFloor)) {
             Elevator elevator = elevatorsList.get(elevatorId);
             elevator.setCurrentFloor(currentFloor);
             elevator.addOrder(targetFloor);
             return Optional.of(elevatorId);
         }
-
         return Optional.empty();
+    }
+
+    private boolean checkIfUpdateArgumentsCorrect(int elevatorId, int currentFloor, int targetFloor) {
+        return elevatorId >= 0 && elevatorId < elevatorsAmount
+                && currentFloor >= 0 && currentFloor <= floorsAmount
+                && targetFloor >= 0 && targetFloor <= floorsAmount;
     }
 
     public void step() {
@@ -66,12 +68,13 @@ public class ElevatorSystem {
     }
 
     public List<ElevatorStatus> status() {
-        elevatorStatusList.forEach(e -> e.updateStatus(elevatorsList.get(e.getElevatorId())));
-        return elevatorStatusList;
+        return elevatorsList.stream()
+                .map(ElevatorStatus::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public String toString() {
-        return status().stream().map(ElevatorStatus::toString).collect(Collectors.joining(":", "[", "]"));
+        return status().stream().map(ElevatorStatus::toString).collect(Collectors.joining(",", "[", "]"));
     }
 }

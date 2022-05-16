@@ -4,6 +4,7 @@ import elevator.ElevatorSystem;
 import utils.OrderDirection;
 
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class OptionsHandler {
 
@@ -23,8 +24,17 @@ public class OptionsHandler {
     }
 
     private void handleStep(String[] arguments) {
-        elevatorSystem.step();
-        System.out.println(elevatorSystem);
+        if (arguments.length == 1) {
+            elevatorSystem.step();
+            System.out.println(elevatorSystem);
+        } else if (arguments.length == 2) {
+            int stepsAmount = Integer.parseInt(arguments[1]);
+            IntStream.range(0,stepsAmount)
+                    .forEach(i -> {
+                        elevatorSystem.step();
+                        System.out.println(elevatorSystem);
+                    });
+        }
     }
 
     private void handlePickup(String[] arguments) {
@@ -32,7 +42,6 @@ public class OptionsHandler {
             System.out.println("Wrong number of arguments");
             return;
         }
-
         int pickupFloor = Integer.parseInt(arguments[1]);
         OrderDirection orderDirection;
         if (arguments[2].equals("up")) {
@@ -43,10 +52,13 @@ public class OptionsHandler {
             System.out.println("Wrong direction");
             return;
         }
-        Optional<Integer> elevatorId = elevatorSystem.pickup(pickupFloor, orderDirection);
+        Optional<Integer> elevatorId = elevatorSystem
+                .pickup(pickupFloor, orderDirection);
         if (elevatorId.isEmpty()) {
             System.out.println("Wrong pickup floor number");
         }
+
+
     }
 
     private void handleUpdate(String[] arguments) {
@@ -54,12 +66,11 @@ public class OptionsHandler {
             System.out.println("Wrong number of arguments");
             return;
         }
-
         int elevatorId = Integer.parseInt(arguments[1]);
         int currentFloor = Integer.parseInt(arguments[2]);
         int targetFloor = Integer.parseInt(arguments[3]);
-
-        Optional<Integer> updatedElevatorId = elevatorSystem.update(elevatorId, currentFloor, targetFloor);
+        Optional<Integer> updatedElevatorId = elevatorSystem
+                .update(elevatorId, currentFloor, targetFloor);
         if (updatedElevatorId.isEmpty()) {
             System.out.println("Wrong update parameters");
         }

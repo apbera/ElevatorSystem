@@ -2,8 +2,8 @@ package elevator;
 
 public class ElevatorStatus {
     private final int elevatorId;
-    private int currentFloor;
-    private int targetFloor;
+    private final int currentFloor;
+    private final int targetFloor;
 
     public ElevatorStatus(Elevator elevator) {
         this.elevatorId = elevator.getId();
@@ -11,17 +11,8 @@ public class ElevatorStatus {
         this.targetFloor = elevator.getTargetFloor();
     }
 
-    public void updateStatus(Elevator elevator) {
-        currentFloor = elevator.getCurrentFloor();
-        targetFloor = elevator.getTargetFloor();
-    }
-
-    public int getElevatorId() {
-        return elevatorId;
-    }
-
     @Override
     public String toString() {
-        return elevatorId + "," + currentFloor + "," + targetFloor;
+        return "{ E" + elevatorId + ", CF:" + currentFloor + ", TF:" + targetFloor + " }";
     }
 }
