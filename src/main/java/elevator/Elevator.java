@@ -51,6 +51,10 @@ public class Elevator {
         return currentFloor;
     }
 
+    void setCurrentFloor(int currentFloor) {
+        this.currentFloor = currentFloor;
+    }
+
     void setDirection(ElevatorDirection direction) {
         this.direction = direction;
     }

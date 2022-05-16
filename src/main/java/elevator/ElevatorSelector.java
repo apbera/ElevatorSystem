@@ -9,9 +9,9 @@ import java.util.Optional;
 public class ElevatorSelector {
     private final int floorsAmount;
 
-    List<Elevator> elevatorsList;
+    private final List<Elevator> elevatorsList;
 
-    ElevatorSelector(List<Elevator> elevatorsList, int floorsAmount){
+    ElevatorSelector(List<Elevator> elevatorsList, int floorsAmount) {
         this.elevatorsList = elevatorsList;
         this.floorsAmount = floorsAmount;
     }
