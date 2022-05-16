@@ -35,6 +35,14 @@ public class Elevator {
         }
     }
 
+    void move() {
+        if (isHeadedUpwards()) {
+            this.currentFloor++;
+        } else if (isHeadedDownwards()) {
+            this.currentFloor--;
+        }
+    }
+
     int getId() {
         return id;
     }
@@ -45,10 +53,6 @@ public class Elevator {
 
     void setDirection(ElevatorDirection direction) {
         this.direction = direction;
-    }
-
-    void setCurrentFloor(int currentFloor) {
-        this.currentFloor = currentFloor;
     }
 
     boolean isIdle() {
@@ -93,14 +97,6 @@ public class Elevator {
         return !upwardsOrders.isEmpty();
     }
 
-    void move() {
-        if (isHeadedUpwards()) {
-            this.currentFloor++;
-        } else if (isHeadedDownwards()) {
-            this.currentFloor--;
-        }
-    }
-
     int nextDownwardsOrder() {
         return downwardsOrders.last();
     }
@@ -118,6 +114,11 @@ public class Elevator {
             return nextDownwardsOrder();
         }
 
-        return -1;
+        return getCurrentFloor();
+    }
+
+    @Override
+    public String toString() {
+        return id + "," + currentFloor + "," + getTargetFloor();
     }
 }
