@@ -43,11 +43,11 @@ public class Elevator {
         }
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
-    int getCurrentFloor() {
+    public int getCurrentFloor() {
         return currentFloor;
     }
 

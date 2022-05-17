@@ -43,12 +43,16 @@ public class ElevatorSystem {
     }
 
     public Optional<Integer> update(int elevatorId, int currentFloor, int targetFloor) {
-        if (checkIfUpdateArgumentsCorrect(elevatorId, currentFloor, targetFloor)) {
-            Elevator elevator = elevatorsList.get(elevatorId);
+        if(!checkIfUpdateArgumentsCorrect(elevatorId, currentFloor, targetFloor)){
+            return Optional.empty();
+        }
+        Elevator elevator = elevatorsList.get(elevatorId);
+        if (elevator.isIdle()) {
             elevator.setCurrentFloor(currentFloor);
             elevator.addOrder(targetFloor);
             return Optional.of(elevatorId);
         }
+        System.out.println("You can update only Idle elevators");
         return Optional.empty();
     }
 

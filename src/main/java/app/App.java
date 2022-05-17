@@ -2,6 +2,7 @@ package app;
 
 import elevator.ElevatorSystem;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class App {
@@ -55,6 +56,7 @@ public class App {
                 Options:
                 step [numberOfSteps]
                 pickup [floorNumber] [direction]
+                order [pickupFloor] [destinationFloor]
                 exit
                 """);
     }
@@ -72,6 +74,8 @@ public class App {
                 optionsHandler.handleOption(splitInstruction);
             } catch (NumberFormatException ex) {
                 System.out.println("Wrong arguments type");
+            } catch (NoSuchElementException ex){
+                System.out.println("Wrong order arguments");
             }
         }
     }
