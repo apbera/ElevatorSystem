@@ -5,11 +5,17 @@ import elevator.ElevatorSystem;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+/**
+ * Application class with main method which provides manual interaction with elevator system.
+ */
 public class App {
     private static ElevatorSystem elevatorSystem;
     private static int floorsAmount;
     private static int elevatorsAmount;
 
+    /**
+     * @param args list of options [floors number, elevators number].
+     */
     public static void main(String[] args) {
 
         checkIfArgsCorrect(args);
@@ -33,7 +39,7 @@ public class App {
 
         } catch (NumberFormatException ex) {
             System.out.println("Arguments need to be Integers: floorsAmount, elevatorsAmount");
-            System.exit(1);
+            System.exit(2);
         }
 
         checkElevatorsAndFloorsAmount(floorsAmount, elevatorsAmount);
@@ -42,11 +48,11 @@ public class App {
     private static void checkElevatorsAndFloorsAmount(int floorsAmount, int elevatorsAmount) {
         if (floorsAmount < 0 || elevatorsAmount < 0) {
             System.out.println("Arguments can't be less than 0");
-            System.exit(1);
+            System.exit(3);
         }
         if (elevatorsAmount > 16) {
             System.out.println("System supports up to 16 elevators");
-            System.exit(1);
+            System.exit(4);
         }
     }
 
@@ -56,14 +62,15 @@ public class App {
                 Options:
                 step [numberOfSteps]
                 pickup [floorNumber] [direction]
-                order [pickupFloor] [destinationFloor]
+                update [elevatorId] [currentFloor] [targetFloor]
+                order [pickupFloor] [targetFloor]
                 exit
                 """);
     }
 
     private static void readInstructions() {
         Scanner scanner = new Scanner(System.in);
-        OptionsHandler optionsHandler = new OptionsHandler(elevatorSystem);
+        InstructionsHandler instructionsHandler = new InstructionsHandler(elevatorSystem);
         while (true) {
             String instruction = scanner.nextLine().trim();
             if (instruction.equals("exit")) {
@@ -71,11 +78,14 @@ public class App {
             }
             String[] splitInstruction = instruction.split("\\s+");
             try {
-                optionsHandler.handleOption(splitInstruction);
+                InstructionsParser instructionsParser = new InstructionsParser(splitInstruction);
+                instructionsHandler.handleInstruction(instructionsParser);
             } catch (NumberFormatException ex) {
                 System.out.println("Wrong arguments type");
-            } catch (NoSuchElementException ex){
+            } catch (NoSuchElementException ex) {
                 System.out.println("Wrong order arguments");
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Wrong instruction");
             }
         }
     }

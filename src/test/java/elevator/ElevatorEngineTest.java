@@ -1,7 +1,6 @@
 package elevator;
 
 import org.junit.jupiter.api.Test;
-import utils.ElevatorDirection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,8 +14,8 @@ public class ElevatorEngineTest {
 
         //When
         elevator.addOrder(4);
-        elevatorEngine.moveElevator(elevator);
-        elevatorEngine.moveElevator(elevator);
+        elevatorEngine.moveElevatorOrChangeDirection(elevator);
+        elevatorEngine.moveElevatorOrChangeDirection(elevator);
 
         //Then
         assertTrue(elevator.isHeadedUpwards());

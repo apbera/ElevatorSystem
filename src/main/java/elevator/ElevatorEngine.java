@@ -1,10 +1,11 @@
 package elevator;
 
-import utils.ElevatorDirection;
-
+/**
+ * Class responsible for moving and changing direction of elevators.
+ */
 public class ElevatorEngine {
 
-    public void moveElevator(Elevator elevator) {
+    void moveElevatorOrChangeDirection(Elevator elevator) {
         if (elevator.isIdle() && elevator.hasOrders()) {
             changeDirectionFromIdle(elevator);
         } else if (elevator.isHeadedUpwards()) {
@@ -16,28 +17,28 @@ public class ElevatorEngine {
 
     private void moveElevatorDownwards(Elevator elevator) {
         if (elevator.hasDownwardsOrders()) {
-            moveElevatorAndRemoveOrder(elevator, elevator.nextDownwardsOrder());
+            moveElevatorAndRemoveOrderIfCompleted(elevator, elevator.nextDownwardsOrder());
         } else {
-            changeDirectionIfHasOrders(elevator, elevator.hasUpwardsOrders(), ElevatorDirection.UPWARDS);
+            changeDirection(elevator, elevator.hasUpwardsOrders(), ElevatorDirection.UPWARDS);
         }
     }
 
     private void moveElevatorUpwards(Elevator elevator) {
         if (elevator.hasUpwardsOrders()) {
-            moveElevatorAndRemoveOrder(elevator, elevator.nextUpwardsOrder());
+            moveElevatorAndRemoveOrderIfCompleted(elevator, elevator.nextUpwardsOrder());
         } else {
-            changeDirectionIfHasOrders(elevator, elevator.hasDownwardsOrders(), ElevatorDirection.DOWNWARDS);
+            changeDirection(elevator, elevator.hasDownwardsOrders(), ElevatorDirection.DOWNWARDS);
         }
     }
 
-    private void moveElevatorAndRemoveOrder(Elevator elevator, int nextOrder) {
+    private void moveElevatorAndRemoveOrderIfCompleted(Elevator elevator, int nextOrder) {
         elevator.move();
         if (elevator.getCurrentFloor() == nextOrder) {
             elevator.removeClosestOrder();
         }
     }
 
-    private void changeDirectionIfHasOrders(Elevator elevator, boolean hasOrders, ElevatorDirection direction) {
+    private void changeDirection(Elevator elevator, boolean hasOrders, ElevatorDirection direction) {
         if (hasOrders) {
             elevator.setDirection(direction);
         } else {

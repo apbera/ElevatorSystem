@@ -2,30 +2,30 @@ package app;
 
 import elevator.Elevator;
 
+/**
+ * Model class which contains data about passenger like pickup floor, target floor
+ * and elevator assigned to him.
+ */
 public class Passenger {
     private final int pickupFloor;
     private final int targetFloor;
     private final Elevator elevator;
 
-    public Passenger(int pickupFloor, int targetFloor, Elevator elevator) {
+    Passenger(int pickupFloor, int targetFloor, Elevator elevator) {
         this.pickupFloor = pickupFloor;
         this.targetFloor = targetFloor;
         this.elevator = elevator;
     }
 
-    public int getPickupFloor() {
-        return pickupFloor;
-    }
-
-    public int getTargetFloor() {
+    int getTargetFloor() {
         return targetFloor;
     }
 
-    public Elevator getElevator() {
+    Elevator getElevator() {
         return elevator;
     }
 
-    public boolean isElevatorOnPickupFloor() {
+    boolean isElevatorOnPickupFloor() {
         return elevator.getCurrentFloor() == pickupFloor;
     }
 }

@@ -1,10 +1,11 @@
 package elevator;
 
-import utils.ElevatorDirection;
-import utils.OrderDirection;
-
 import java.util.TreeSet;
 
+/**
+ * Model class for one elevator.
+ * It stores data about direction, current floor and uses tree sets to store orders.
+ */
 public class Elevator {
     private final int id;
     private ElevatorDirection direction;
@@ -43,10 +44,16 @@ public class Elevator {
         }
     }
 
+    /**
+     * @return id of elevator.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @return current floor of elevator.
+     */
     public int getCurrentFloor() {
         return currentFloor;
     }
@@ -93,6 +100,10 @@ public class Elevator {
         return downwardsOrders.size();
     }
 
+    int ordersAmount() {
+        return upwardsOrders.size() + downwardsOrders.size();
+    }
+
     boolean hasDownwardsOrders() {
         return !downwardsOrders.isEmpty();
     }
@@ -113,14 +124,15 @@ public class Elevator {
         if (isHeadedUpwards() && hasUpwardsOrders()) {
             return nextUpwardsOrder();
         }
-
         if (isHeadedDownwards() && hasDownwardsOrders()) {
             return nextDownwardsOrder();
         }
-
         return getCurrentFloor();
     }
 
+    /**
+     * @return human-readable data of elevator.
+     */
     @Override
     public String toString() {
         return id + "," + currentFloor + "," + getTargetFloor();

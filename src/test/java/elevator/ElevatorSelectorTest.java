@@ -1,7 +1,6 @@
 package elevator;
 
 import org.junit.jupiter.api.Test;
-import utils.OrderDirection;
 
 import java.util.List;
 import java.util.Optional;

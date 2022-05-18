@@ -1,7 +1,6 @@
 package elevator;
 
 import org.junit.jupiter.api.Test;
-import utils.ElevatorDirection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
