@@ -24,7 +24,7 @@ public class InstructionsParser {
             case "pickup" -> parsePickup(arguments);
             case "update" -> parseUpdate(arguments);
             case "order" -> parseOrder(arguments);
-            default -> throw new IllegalArgumentException();
+            default -> throw new IllegalArgumentException("There is no such an instruction");
         }
     }
 
@@ -35,7 +35,7 @@ public class InstructionsParser {
     private void parseOrder(String[] arguments) {
         instruction = arguments[0];
         if (arguments.length < 3) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Wrong number of arguments for order");
         }
         instructionArguments = IntStream.range(0, 2)
                 .map(i -> Integer.parseInt(arguments[i + 1]))
@@ -45,7 +45,7 @@ public class InstructionsParser {
     private void parseUpdate(String[] arguments) {
         instruction = arguments[0];
         if (arguments.length < 4) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Wrong number of arguments for update");
         }
         instructionArguments = IntStream.range(0, 3)
                 .map(i -> Integer.parseInt(arguments[i + 1]))
@@ -55,7 +55,7 @@ public class InstructionsParser {
     private void parsePickup(String[] arguments) {
         instruction = arguments[0];
         if (arguments.length < 3) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Wrong number of arguments for pickup");
         }
         instructionArguments = IntStream.range(0, 1)
                 .map(i -> Integer.parseInt(arguments[i + 1]))

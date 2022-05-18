@@ -6,6 +6,7 @@ import elevator.OrderDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -39,9 +40,9 @@ public class InstructionsHandler {
 
     private void handleOrder(int pickupFloor, int destinationFloor) {
         OrderDirection orderDirection = getOrderDirection(pickupFloor, destinationFloor)
-                .orElseThrow();
+                .orElseThrow(() -> new NoSuchElementException("Wrong order arguments"));
         Integer elevatorId = elevatorSystem.pickup(pickupFloor, orderDirection)
-                .orElseThrow();
+                .orElseThrow(() -> new NoSuchElementException("Can't pickup to progress with order"));
         Elevator elevator = elevatorSystem.getElevatorsList().get(elevatorId);
         Passenger passenger = new Passenger(pickupFloor, destinationFloor, elevator);
         waitingPassengers.add(passenger);
@@ -71,7 +72,7 @@ public class InstructionsHandler {
 
     private void handlePickup(int pickupFloor, OrderDirection orderDirection) {
         elevatorSystem.pickup(pickupFloor, orderDirection)
-                .ifPresentOrElse(id -> System.out.println("Elevator " + id + "ordered on floor" + pickupFloor),
+                .ifPresentOrElse(id -> System.out.println("Elevator " + id + " ordered on floor " + pickupFloor),
                         () -> System.out.println("Wrong pickup floor number"));
     }
 

@@ -1,5 +1,6 @@
 package elevator;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -9,16 +10,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ElevatorSystemTest {
 
+    ElevatorSystem elevatorSystem;
+
+    @BeforeEach
+    public void setUp(){
+        elevatorSystem = new ElevatorSystem(10, 4);
+    }
 
     @Test
     public void shouldOrderBestElevator() {
-        //Given
-        ElevatorSystem elevatorSystem = new ElevatorSystem(10, 4);
-
         //When
         Optional<Integer> bestElevatorId = elevatorSystem.pickup(4, OrderDirection.UPWARDS);
 
         //Then
+        assertTrue(bestElevatorId.isPresent());
         assertEquals(0, bestElevatorId.get());
     }
 

@@ -19,7 +19,6 @@ public class ElevatorSelector {
 
     Optional<Elevator> findBestElevator(Integer floor, OrderDirection direction) {
         Comparator<Elevator> byFitness = Comparator.comparing(e -> getElevatorFitness(e, floor, direction));
-
         return elevatorsList.stream().min(byFitness);
     }
 
