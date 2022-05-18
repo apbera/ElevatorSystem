@@ -56,7 +56,7 @@ Instructions available for user:
 Status is printing current status of all elevators as list of status objects.
 E*id* - Elevator *id*, CF - current floor, TF - target floor.
 
-Step is making one step in elevator system or more steps if argument was passed to instruction in elevator system. Step means moving elevators or changing theirs direction.
+Step is making one step in elevator system or more steps if argument was passed to instruction. Step means moving elevators or changing theirs direction.
 After that it prints status of elevators.
 
 Pickup simulates pressing a button with direction up or down on specified floor.
